@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Économique France | Février 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --primary-blue: #0f172a;
+            --accent-blue: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 { margin: 0; font-size: 20px; font-weight: 700; color: var(--primary-blue); }
+        .meta { color: var(--text-secondary); font-size: 12px; }
+        .badge-date { background: var(--primary-blue); color: white; padding: 4px 12px; border-radius: 4px; font-weight: 600; }
+
+        /* GRID SYSTEM */
+        .grid { display: grid; gap: 20px; }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+
+        /* CARDS */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .card-title { font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+
+        /* KPI STYLES */
+        .kpi-val { font-size: 24px; font-weight: 700; color: var(--primary-blue); margin: 4px 0; }
+        .kpi-sub { font-size: 12px; color: var(--text-secondary); }
+        .trend { font-weight: 600; font-size: 12px; }
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+        .trend-warn { color: var(--warning); }
+        
+        /* Specific coloring for negative economic indicators (debt, unemployment) */
+        .neg-bad { color: var(--danger); } 
+        .pos-good { color: var(--success); }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; padding: 8px; border-bottom: 2px solid var(--border-color); color: var(--text-secondary); }
+        td { padding: 8px; border-bottom: 1px solid var(--border-color); }
+        tr:last-child td { border-bottom: none; }
+        .num { text-align: right; }
+
+        /* UTILS */
+        .chart-container { position: relative; height: 200px; width: 100%; }
+        .section-title { font-size: 16px; font-weight: 700; margin: 30px 0 10px 0; border-left: 4px solid var(--accent-blue); padding-left: 10px; }
+        .alert-box { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; padding: 10px; border-radius: 4px; font-size: 12px; margin-bottom: 10px; }
+
+        @media (max-width: 1200px) {
+            .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            .col-span-2, .col-span-3 { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>ÉTAT DES LIEUX ÉCONOMIQUE - FRANCE</h1>
+            <div class="meta">Données consolidées au 1er Février 2026 | Sources : INSEE, BdF, Ministères, Business France</div>
+        </div>
+        <div class="badge-date">01/02/2026</div>
+    </header>
+
+    <div class="grid grid-4">
+        <div class="card">
+            <div class="card-title">Croissance PIB (2025)</div>
+            <div class="kpi-val">0.9%</div>
+            <div class="kpi-sub">
+                T4 2025: <span class="trend-warn">+0.2%</span> (vs +0.5% T3)<br>
+                Prévision 2026: <strong>+1.0%</strong>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Chômage (T3 2025)</div>
+            <div class="kpi-val neg-bad">7.7%</div>
+            <div class="kpi-sub">
+                Tend. Fin 2026: <span class="neg-bad">8.2%</span><br>
+                Demandeurs Cat A: <strong>3.35 M</strong> (+6.8%/an)
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Inflation (Déc 2025)</div>
+            <div class="kpi-val pos-good">0.8%</div>
+            <div class="kpi-sub">
+                Énergie: <span class="pos-good">-6.8%</span> | Alim: +1.7%<br>
+                Livret A: <strong>1.5%</strong> (Fév 26)
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Dette Publique (2026)</div>
+            <div class="kpi-val neg-bad">117.9%</div>
+            <div class="kpi-sub">
+                Déficit 2025: -5.4%<br>
+                Flux: <strong>+6 405 € / seconde</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">MACROÉCONOMIE & FINANCES PUBLIQUES</div>
+    <div class="grid grid-3">
+        <div class="card col-span-2">
+            <div class="card-header">
+                <div class="card-title">Trajectoire Croissance & Chômage</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartMacro"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Impasse Budgétaire</div>
+            </div>
+            <table>
+                <tr><td>Déficit Public 2025</td><td class="num neg-bad">-5.4% PIB</td></tr>
+                <tr><td>Cible Gouv. 2026</td><td class="num">-4.7% PIB</td></tr>
+                <tr><td>Risque Sénat 2026</td><td class="num neg-bad">-5.3% PIB</td></tr>
+                <tr><td>Dette Nominale 2026</td><td class="num">~3 650 Mds €</td></tr>
+                <tr><td>Charge Intérêts 2026</td><td class="num neg-bad">74 Mds €</td></tr>
+                <tr><td>Prélèvements Oblig.</td><td class="num">43.7% PIB</td></tr>
+            </table>
+            <div class="alert-box" style="margin-top:15px;">
+                <strong>Alerte PLF 2026 :</strong> Écart de 18,4 Mds € (Recettes -7.4 Md€, Dépenses +11 Md€).
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:20px;">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Marché du Travail (Détails)</div>
+            </div>
+            <table>
+                <tr><td>Demandeurs A,B,C</td><td class="num">5 752 600</td></tr>
+                <tr><td>Var. Trimestrielle</td><td class="num neg-bad">+1.0%</td></tr>
+                <tr><td>Var. Annuelle (Total)</td><td class="num neg-bad">+4.8%</td></tr>
+                <tr><td>Créations Net. T3 25</td><td class="num">51 000</td></tr>
+                <tr><td>Créations Net. T3 24</td><td class="num">214 000</td></tr>
+                <tr><td>Pop. Active (T3)</td><td class="num">+171 000</td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Pouvoir d'Achat & Tarifs (01/02/26)</div>
+            </div>
+            <table>
+                <tr><td>SMIC Net Mensuel</td><td class="num">1 443.11 €</td></tr>
+                <tr><td>Électricité (Abo.)</td><td class="num pos-good">-10 €/an</td></tr>
+                <tr><td>Livret A</td><td class="num neg-bad">1.5% (-0.2pt)</td></tr>
+                <tr><td>LEP</td><td class="num pos-good">2.5% (+0.6pt)</td></tr>
+                <tr><td>Frais Bancaires</td><td class="num neg-bad">+3.0%</td></tr>
+                <tr><td>Gaz Chauffage</td><td class="num pos-good">0.099 €/kWh</td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Climat des Affaires (Jan 26)</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartClimat"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">SECTEURS CLÉS & INDUSTRIE</div>
+    <div class="grid grid-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Automobile 2025</div>
+            </div>
+            <div class="kpi-val">1.48 M</div>
+            <div class="kpi-sub">Véhicules produits (+3.9%)</div>
+            <table style="margin-top:10px;">
+                <tr><td><strong>Renault</strong></td><td class="num pos-good">+17.8%</td></tr>
+                <tr><td>Douai</td><td class="num">248 000</td></tr>
+                <tr><td><strong>Stellantis</strong></td><td class="num neg-bad">-4.0%</td></tr>
+                <tr><td>Mulhouse</td><td class="num">220 000</td></tr>
+                <tr><td>Part Électrique</td><td class="num">25%</td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Agriculture 2025</div>
+            </div>
+            <div class="kpi-val">88.5 Md€</div>
+            <div class="kpi-sub">Valeur Production (+6.9%)</div>
+            <table style="margin-top:10px;">
+                <tr><td>Céréales (Vol.)</td><td class="num pos-good">+16.3%</td></tr>
+                <tr><td>Blé Tendre</td><td class="num">37.2 Mt</td></tr>
+                <tr><td>Vins (Vol.)</td><td class="num pos-good">+7.7%</td></tr>
+                <tr><td>Bovins Viande</td><td class="num">+11.3%</td></tr>
+                <tr><td>Solde Export</td><td class="num">+9.2 Md€</td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Construction / BTP</div>
+            </div>
+            <div class="kpi-val neg-bad">-4.0%</div>
+            <div class="kpi-sub">Activité Secteur 2025</div>
+            <table style="margin-top:10px;">
+                <tr><td>Permis (2 ans)</td><td class="num neg-bad">-30%</td></tr>
+                <tr><td>Mises Chantier</td><td class="num">300 000</td></tr>
+                <tr><td>Emplois perdus</td><td class="num">50 000</td></tr>
+                <tr><td>Défaillances</td><td class="num">12 500</td></tr>
+                <tr><td>Prev. 2026</td><td class="num pos-good">+1.8%</td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Investissements Étrangers</div>
+            </div>
+            <div class="kpi-val">1 878</div>
+            <div class="kpi-sub">Projets décidés en 2025</div>
+            <table style="margin-top:10px;">
+                <tr><td>Emplois</td><td class="num">47 734</td></tr>
+                <tr><td>Points Vente</td><td class="num">522</td></tr>
+                <tr><td>Production</td><td class="num">472</td></tr>
+                <tr><td>R&D</td><td class="num">185</td></tr>
+                <tr><td>Export Ent. Étr.</td><td class="num">57.3 Md€</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-title">RÉGALIEN, DÉFENSE & NUMÉRIQUE</div>
+    <div class="grid grid-3">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Défense 2026</div>
+            </div>
+            <table>
+                <tr><td>Budget</td><td class="num">57.1 Md€ (+13.3%)</td></tr>
+                <tr><td>Part PIB</td><td class="num">2.08%</td></tr>
+                <tr><td>Effectifs</td><td class="num">274 500</td></tr>
+                <tr><td>Recrutement 26</td><td class="num">40 000</td></tr>
+                <tr><td>Nucléaire</td><td class="num">5.6 Md€</td></tr>
+            </table>
+            <div class="kpi-sub" style="margin-top:10px;">
+                <strong>Matériel Majeur:</strong> Rafale F5, SNLE 3G, 10 systèmes Mamba. France Nation-cadre OTAN 2026 (Exercice ORION 26).
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Sécurité Intérieure</div>
+            </div>
+            <table>
+                <tr><td>Budget Sécu.</td><td class="num">17.69 Md€</td></tr>
+                <tr><td>Police Nat.</td><td class="num">153 285 agents</td></tr>
+                <tr><td>Gendarmerie</td><td class="num">103 078 agents</td></tr>
+                <tr><td>Justice</td><td class="num">11.2 Md€</td></tr>
+                <tr><td>Prisons</td><td class="num">+15k places (27)</td></tr>
+            </table>
+            <div class="kpi-sub" style="margin-top:10px;">
+                <strong>Stratégie:</strong> 200 nouvelles brigades, généralisation caméras piétons, +30% présence voie publique.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Numérique & IA</div>
+            </div>
+            <table>
+                <tr><td>Budget IA Public</td><td class="num">2.5 Md€</td></tr>
+                <tr><td>Levées Privées</td><td class="num">1.8 Md€ (2025)</td></tr>
+                <tr><td>Cybersécurité</td><td class="num">1.1 Md€</td></tr>
+                <tr><td>ANSSI</td><td class="num">1 200 agents</td></tr>
+            </table>
+            <div class="kpi-sub" style="margin-top:10px;">
+                <strong>Leaders:</strong> Mistral AI (Licorne).<br>
+                <strong>Gouvernance:</strong> Création du CIAN (Jan 26). Application AI Act progressif.
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+             <div class="card-header">
+                <div class="card-title">Tourisme 2025</div>
+            </div>
+            <div class="grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>
+                    <div class="kpi-val">71 Md€</div>
+                    <div class="kpi-sub">Recettes Totales</div>
+                </div>
+                <div>
+                    <div class="kpi-val pos-good">+11.8 Md€</div>
+                    <div class="kpi-sub">Solde Commercial</div>
+                </div>
+            </div>
+            <div class="kpi-sub" style="margin-top:10px;">
+                Arrivées étrangères: +8.2%. Objectif 2030: 100 Md€.
+                Top Région: Île-de-France (31%).
+            </div>
+        </div>
+
+        <div class="card">
+             <div class="card-header">
+                <div class="card-title">Comparaison Zone Euro 2026</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="chartEuro"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Chart.defaults.font.family = '-apple-system, system-ui, sans-serif';
+    Chart.defaults.color = '#64748b';
+
+    // 1. MACRO CHART
+    const ctxMacro = document.getElementById('chartMacro').getContext('2d');
+    new Chart(ctxMacro, {
+        type: 'line',
+        data: {
+            labels: ['2023', '2024', '2025', '2026 Prev'],
+            datasets: [
+                {
+                    label: 'Croissance PIB (%)',
+                    data: [1.6, 1.1, 0.9, 1.0],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Chômage (%)',
+                    data: [7.3, 7.5, 7.7, 8.2], // 7.3/7.5 estimated for context based on trend
+                    borderColor: '#ef4444',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'bottom' } },
+            scales: {
+                y: { type: 'linear', display: true, position: 'left', title: {display:true, text:'PIB'} },
+                y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display:true, text:'Chômage'} }
+            }
+        }
+    });
+
+    // 2. CLIMAT CHART
+    const ctxClimat = document.getElementById('chartClimat').getContext('2d');
+    new Chart(ctxClimat, {
+        type: 'bar',
+        data: {
+            labels: ['Industrie', 'Commerce Gros', 'Moyenne', 'Détail', 'Services', 'Bâtiment'],
+            datasets: [{
+                label: 'Indice (Base 100)',
+                data: [105, 100, 99, 99, 98, 97],
+                backgroundColor: [
+                    '#10b981', '#3b82f6', '#94a3b8', '#f59e0b', '#f59e0b', '#ef4444'
+                ],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: { x: { min: 90, max: 110 } }
+        }
+    });
+
+    // 3. EURO COMPARISON CHART
+    const ctxEuro = document.getElementById('chartEuro').getContext('2d');
+    new Chart(ctxEuro, {
+        type: 'bar',
+        data: {
+            labels: ['Espagne', 'Zone Euro', 'Allemagne', 'France', 'Italie'],
+            datasets: [
+                {
+                    label: 'Croissance 2026 (%)',
+                    data: [2.3, 1.5, 1.2, 1.0, 0.8],
+                    backgroundColor: '#3b82f6',
+                    order: 1
+                },
+                {
+                    label: 'Chômage T3 25 (%)',
+                    data: [11.8, 6.3, 3.4, 7.7, 6.5], // Italy est around 6.5
+                    type: 'line',
+                    borderColor: '#0f172a',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    order: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+</script>
+
+</body>
+</html>
